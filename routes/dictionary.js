@@ -20,15 +20,22 @@ module.exports = (app, passport) => {
     router.put('/', passport.authenticate('jwt', {session: false}), validator.body(updateTranslationsSchema), async (req, res, next) => {
         try {
             const word = await addTranslation(req.body)
-            res.json(word)
+            return res.json(word)
         } catch (err) {
             return next(err)
         }
     })
 
     router.get('/:keyword/:exact', validator.params(keywordParam), async (req, res, next) => {
-        const resultList = await searchByKeyword(req.params.keyword,req.params.exact)
-        res.json(resultList)
+
+        try {
+            const resultList = await searchByKeyword(req.params.keyword,req.params.exact)
+            res.json(resultList)
+        } catch (err) {
+            next(err)
+        }
+
+
     })
 
     return router
