@@ -55,7 +55,23 @@ export const searchByKeyword = async (keyword, exact) => {
 
 }
 
-export const addNewWord = async (word) => {
+export const updateWord = async (newWord) => {
+    let word = await Dictionary.findById(newWord._id)
+    word.word = newWord.word
+    word.type = newWord.type
+    word.plural = newWord.plural
+    word.article = newWord.article
+    word.perfect = newWord.perfect
+    word.translations = newWord.translations
+    word.conjugation_present = newWord.conjugation_present
+    word.categories = newWord.categories
+
+
+    await Dictionary.update({_id: newWord._id}, word, {multi: false})
+    return word
+}
+
+export const addNewWord = async (word, id) => {
 
     const result = await Dictionary.find({word: word.word}).limit(1)
 
@@ -72,8 +88,15 @@ export const addNewWord = async (word) => {
     newWord.translations = word.translations
     newWord.conjugation_present = word.conjugation_present
     newWord.categories = word.categories
+    newWord.ownerId = id
+
 
     let res = await newWord.save()
 
     return res
+}
+
+
+export const searchById = async (id) => {
+    return await Dictionary.findById(id)
 }

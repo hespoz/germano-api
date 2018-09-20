@@ -14,6 +14,7 @@ const translationListSchema = Joi.array().items(Joi.object().keys({
 })).required()
 
 export const addWordSchema = Joi.object({
+    _id:Joi.objectId(),
     word: Joi.string().required(),
     plural: Joi.string(),
     article: Joi.string(),
@@ -44,4 +45,7 @@ export const loginSchema = Joi.object({
     password: Joi.string().required()
 })
 
+export const idParam = Joi.object({
+    id: Joi.objectId().required()
+})
 

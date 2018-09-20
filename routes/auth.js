@@ -12,7 +12,7 @@ router.post('/', validator.body(loginSchema), async (req, res, next) => {
     if(!user){
         return res.status(401).json({message:'Email or password is incorrect'})
     }
-    return res.json({token: generateToken(user)})
+    return res.json({token: generateToken(user), userId: user.id})
 })
 
 export default router

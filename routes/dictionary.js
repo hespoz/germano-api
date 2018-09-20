@@ -1,16 +1,18 @@
 import express from 'express'
-import { searchByKeyword, addNewWord, addTranslation } from "../controllers/dictionary"
+import { searchByKeyword, addNewWord, updateWord, addTranslation, searchById } from "../controllers/dictionary"
 import Validator from 'express-joi-validation'
-import { addWordSchema, keywordParam, updateTranslationsSchema} from './validationSchemas'
+import { addWordSchema, keywordParam, updateTranslationsSchema, idParam} from './validationSchemas'
 
 const router = express.Router()
 const validator = Validator({})
 
 module.exports = (app, passport) => {
 
-    router.post('/', passport.authenticate('jwt', {session: false}), validator.body(addWordSchema), async (req, res, next) => {
+    router.post('/', passport.authenticate('jwt', {session: false}), validator.body(addWordSchema, {
+        joi: {allowUnknown: true}
+    }), async (req, res, next) => {
         try {
-            const word = await addNewWord(req.body)
+            const word = req.body._id ? await updateWord(req.body) : await addNewWord(req.body, req.user._id)
             res.json(word)
         } catch (err) {
             return next(err)
@@ -30,6 +32,18 @@ module.exports = (app, passport) => {
 
         try {
             const resultList = await searchByKeyword(req.params.keyword,req.params.exact)
+            res.json(resultList)
+        } catch (err) {
+            next(err)
+        }
+
+
+    })
+
+    router.get('/:id', validator.params(idParam), async (req, res, next) => {
+
+        try {
+            const resultList = await searchById(req.params.id)
             res.json(resultList)
         } catch (err) {
             next(err)
