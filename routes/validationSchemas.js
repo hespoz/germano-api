@@ -49,3 +49,7 @@ export const idParam = Joi.object({
     id: Joi.objectId().required()
 })
 
+export const fetchWordsSchema = Joi.object({
+    categories: Joi.array().items(Joi.string()),
+    types: Joi.array().items(Joi.string()),
+})

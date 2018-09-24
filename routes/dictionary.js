@@ -1,7 +1,7 @@
 import express from 'express'
-import { searchByKeyword, addNewWord, updateWord, addTranslation, searchById } from "../controllers/dictionary"
+import { searchByKeyword, addNewWord, updateWord, addTranslation, searchById, fetchWords } from "../controllers/dictionary"
 import Validator from 'express-joi-validation'
-import { addWordSchema, keywordParam, updateTranslationsSchema, idParam} from './validationSchemas'
+import { addWordSchema, keywordParam, updateTranslationsSchema, idParam, fetchWordsSchema} from './validationSchemas'
 
 const router = express.Router()
 const validator = Validator({})
@@ -44,6 +44,19 @@ module.exports = (app, passport) => {
 
         try {
             const resultList = await searchById(req.params.id)
+            res.json(resultList)
+        } catch (err) {
+            next(err)
+        }
+
+
+    })
+
+
+    router.post('/search', validator.body(fetchWordsSchema), async (req, res, next) => {
+
+        try {
+            const resultList = await fetchWords(req.body.categories, req.body.types)
             res.json(resultList)
         } catch (err) {
             next(err)

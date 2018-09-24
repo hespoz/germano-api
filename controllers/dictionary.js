@@ -1,4 +1,6 @@
 import {Dictionary} from "../models/dictionary";
+import {includes} from "lodash";
+
 
 export const addTranslation = async (body) => {
     let word = await Dictionary.findById(body.id)
@@ -99,4 +101,26 @@ export const addNewWord = async (word, id) => {
 
 export const searchById = async (id) => {
     return await Dictionary.findById(id)
+}
+
+export const fetchWords = async (categories, types) => {
+    let searchQuery = {$and:[]}
+
+    if (categories) {
+        if (!includes(categories, "Todas")) {
+            searchQuery.$and.push({categories: categories})
+        }
+    }
+
+    if (types) {
+        searchQuery.$and.push({type: {$in: types}})
+    }
+
+    if(!categories && !types) {
+        searchQuery={}
+    }
+
+    console.log(searchQuery)
+
+    return await Dictionary.find(searchQuery)
 }
