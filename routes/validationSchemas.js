@@ -52,4 +52,5 @@ export const idParam = Joi.object({
 export const fetchWordsSchema = Joi.object({
     categories: Joi.array().items(Joi.string()),
     types: Joi.array().items(Joi.string()),
+    bucket: Joi.string()
 })
