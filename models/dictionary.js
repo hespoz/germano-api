@@ -15,7 +15,7 @@ const TranslationSchema = new mongoose.Schema({
 })
 
 
-const DictionarySchema = new mongoose.Schema({
+export const DictionarySchema = new mongoose.Schema({
     word:String,
     plural:String,
     article:{ type: String, enum: ['der', 'die', 'das'] },

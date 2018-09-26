@@ -6,6 +6,7 @@ import passport from './config/passport'
 
 import auth from './routes/auth';
 import user from './routes/user';
+import bucket from './routes/bucket';
 import dictionary from './routes/dictionary';
 
 var app = express();
@@ -17,6 +18,7 @@ app.use(cookieParser())
 
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/user', user);
+app.use('/api/v1/bucket', bucket(app, passport));
 app.use('/api/v1/dictionary', dictionary(app, passport));
 
 module.exports = app;

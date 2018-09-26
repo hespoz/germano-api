@@ -11,7 +11,7 @@ export const registerUser = async (data) => {
 
     let newUser = new User()
     newUser.email = data.email
-    newUser.username = data.username
+    newUser.username = data.email.split("@")[0]
     newUser.password = data.password
 
     return await newUser.save()

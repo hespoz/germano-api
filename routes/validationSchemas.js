@@ -54,3 +54,13 @@ export const fetchWordsSchema = Joi.object({
     types: Joi.array().items(Joi.string()),
     bucket: Joi.string()
 })
+
+export const createBucketSchema = Joi.object({
+    _id: Joi.objectId().optional(),
+    name: Joi.string().required(),
+    wordsIds: Joi.array().items(Joi.objectId()).optional()
+})
+
+export const bucketPerNameParam = Joi.object({
+    username: Joi.string().required()
+})
