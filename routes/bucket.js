@@ -13,7 +13,6 @@ module.exports = (app, passport) => {
     }), async (req, res, next) => {
         try {
             const bucket = req.body._id ? await updateBucket(req.body, req.user._id) : await createBucket(req.body, req.user._id)
-            console.log(bucket)
             res.json(bucket)
         } catch (err) {
             return next(err)

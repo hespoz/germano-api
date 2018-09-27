@@ -2,8 +2,8 @@ import Joi from 'joi'
 
 Joi.objectId = require('joi-objectid')(Joi)
 
-export const updateTranslationsSchema =Joi.object().keys({
-    id:Joi.objectId().required(),
+export const updateTranslationsSchema = Joi.object().keys({
+    id: Joi.objectId().required(),
     lang: Joi.string().valid('de', 'es', 'en', 'fr', 'it', 'ru').required(),
     translation: Joi.array().items(Joi.string()).required()
 }).required()
@@ -14,7 +14,7 @@ const translationListSchema = Joi.array().items(Joi.object().keys({
 })).required()
 
 export const addWordSchema = Joi.object({
-    _id:Joi.objectId(),
+    _id: Joi.objectId(),
     word: Joi.string().required(),
     plural: Joi.string(),
     article: Joi.string(),
@@ -57,7 +57,11 @@ export const fetchWordsSchema = Joi.object({
 
 export const createBucketSchema = Joi.object({
     _id: Joi.objectId().optional(),
-    name: Joi.string().required(),
+    name: Joi.string().optional(),
+    sentences: Joi.array().items(Joi.object({
+        germanSentence: Joi.string(),
+        spanishSentence: Joi.string()
+    })).optional(),
     wordsIds: Joi.array().items(Joi.objectId()).optional()
 })
 

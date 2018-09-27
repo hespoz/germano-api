@@ -17,6 +17,7 @@ export const createBucket = async (bucket, ownerId) => {
     let newBucket = new Bucket()
     newBucket.name = bucket.name
     newBucket.ownerId = ownerId
+    newBucket.sentences = bucket.sentences
 
     let wordsToAdd = []
     for (let i = 0; i < bucket.wordsIds.length; i++) {
@@ -44,17 +45,26 @@ export const updateBucket = async (newBucket, ownerId) => {
         throw new Error("You don't have permissions to update this bucket")
     }
 
-    updatedBucket.name = newBucket.name
-
-    let wordsToAdd = []
-    for (let i = 0; i < newBucket.wordsIds.length; i++) {
-        let word = await Dictionary.findById(newBucket.wordsIds[i])
-        if (word) {
-            wordsToAdd.push(word)
-        }
+    if(newBucket.name) {
+        updatedBucket.name = newBucket.name
     }
 
-    updatedBucket.words = wordsToAdd
+    if(newBucket.sentences) {
+        updatedBucket.sentences = newBucket.sentences
+    }
+
+
+    if(newBucket.wordsIds) {
+        let wordsToAdd = []
+        for (let i = 0; i < newBucket.wordsIds.length; i++) {
+            let word = await Dictionary.findById(newBucket.wordsIds[i])
+            if (word) {
+                wordsToAdd.push(word)
+            }
+        }
+
+        updatedBucket.words = wordsToAdd
+    }
 
     return await updatedBucket.save()
 
