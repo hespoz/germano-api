@@ -6,6 +6,10 @@ export const searchById = async (id) => {
     return await Bucket.findById(id)
 }
 
+export const removeBucket = async (id) => {
+    return await Bucket.findByIdAndRemove(id)
+}
+
 export const createBucket = async (bucket, ownerId) => {
 
     const result = await Bucket.find({word: bucket.name}).limit(1)
@@ -19,15 +23,18 @@ export const createBucket = async (bucket, ownerId) => {
     newBucket.ownerId = ownerId
     newBucket.sentences = bucket.sentences
 
-    let wordsToAdd = []
-    for (let i = 0; i < bucket.wordsIds.length; i++) {
-        let word = await Dictionary.findById(bucket.wordsIds[i])
-        if (word) {
-            wordsToAdd.push(word)
-        }
-    }
 
-    newBucket.words = wordsToAdd
+    if (bucket.wordsIds) {
+        let wordsToAdd = []
+        for (let i = 0; i < bucket.wordsIds.length; i++) {
+            let word = await Dictionary.findById(bucket.wordsIds[i])
+            if (word) {
+                wordsToAdd.push(word)
+            }
+        }
+
+        newBucket.words = wordsToAdd
+    }
 
     return await newBucket.save()
 
@@ -53,11 +60,12 @@ export const updateBucket = async (newBucket, ownerId) => {
         updatedBucket.sentences = newBucket.sentences
     }
 
-
+    console.log(newBucket.wordsIds)
     if(newBucket.wordsIds) {
         let wordsToAdd = []
         for (let i = 0; i < newBucket.wordsIds.length; i++) {
             let word = await Dictionary.findById(newBucket.wordsIds[i])
+            console.log(word, newBucket.wordsIds[i])
             if (word) {
                 wordsToAdd.push(word)
             }
