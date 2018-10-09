@@ -60,7 +60,6 @@ export const updateBucket = async (newBucket, ownerId) => {
         updatedBucket.sentences = newBucket.sentences
     }
 
-    console.log(newBucket.wordsIds)
     if(newBucket.wordsIds) {
         let wordsToAdd = []
         for (let i = 0; i < newBucket.wordsIds.length; i++) {

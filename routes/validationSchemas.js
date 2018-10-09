@@ -68,3 +68,19 @@ export const createBucketSchema = Joi.object({
 export const bucketPerNameParam = Joi.object({
     username: Joi.string().required()
 })
+
+export const addCommentSchema = Joi.object().keys({
+    id: Joi.objectId().required(),
+    comment: Joi.string().required()
+}).required()
+
+export const editCommentSchema = Joi.object().keys({
+    sentenceId: Joi.objectId().required(),
+    commentId: Joi.objectId().required(),
+    comment: Joi.string().required()
+}).required()
+
+export const removeCommentSchema = Joi.object({
+    sentenceId: Joi.objectId().required(),
+    commentId: Joi.objectId().required()
+})

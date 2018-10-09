@@ -2,8 +2,11 @@ import mongoose from "mongoose"
 mongoose.Promise = Promise
 
 import { DictionarySchema } from "./dictionary"
-import { CommentSchema } from "./comment"
 
+export const CommentSchema = new mongoose.Schema({
+    comment:String,
+    authorId:{ type: mongoose.Schema.ObjectId, ref: 'User' }
+})
 
 const SentenceSchema = new mongoose.Schema({
     germanSentence:String,
@@ -18,4 +21,5 @@ const BucketSchema = new mongoose.Schema({
     words: [DictionarySchema]
 })
 
+export const Sentence = mongoose.model('Sentence', SentenceSchema)
 export const Bucket = mongoose.model('Bucket', BucketSchema)
