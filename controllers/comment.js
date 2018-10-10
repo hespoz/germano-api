@@ -13,7 +13,7 @@ const getBucketBySentenceAndCommentId = async (sentenceId, commentId) => {
     return result[0]
 }
 
-export const addComment = async (sentenceId, comment) => {
+export const addComment = async (sentenceId, comment, user) => {
     let result = await Bucket.find({'sentences': {$elemMatch:{_id:sentenceId}}})
     let bucket = result[0]
 
@@ -26,7 +26,7 @@ export const addComment = async (sentenceId, comment) => {
     let sentence = bucket.sentences[index]
 
     if (sentence.comments) {
-        sentence.comments.push({comment})
+        sentence.comments.push({authorId: user._id, authorName: user.username, comment})
     } else {
         sentence.comments = [{comment}]
     }

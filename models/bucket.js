@@ -5,7 +5,8 @@ import { DictionarySchema } from "./dictionary"
 
 export const CommentSchema = new mongoose.Schema({
     comment:String,
-    authorId:{ type: mongoose.Schema.ObjectId, ref: 'User' }
+    authorId:{ type: mongoose.Schema.ObjectId, ref: 'User' },
+    authorName:String,
 })
 
 const SentenceSchema = new mongoose.Schema({

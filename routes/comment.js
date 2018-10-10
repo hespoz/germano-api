@@ -10,7 +10,8 @@ module.exports = (app, passport) => {
 
     router.post('/', passport.authenticate('jwt', {session: false}), validator.body(addCommentSchema), async (req, res, next) => {
         try {
-            const bucket = await addComment(req.body.id, req.body.comment)
+            console.log(req.user)
+            const bucket = await addComment(req.body.id, req.body.comment, req.user)
             res.json(bucket)
         } catch (err) {
             return next(err)
