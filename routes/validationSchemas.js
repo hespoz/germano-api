@@ -25,6 +25,10 @@ export const addWordSchema = Joi.object({
         pronoun: Joi.string().valid('ich', 'du', 'er/sie/es', 'ihr', 'Sie', 'wir').required(),
         conjugation: Joi.string().required()
     })),
+    conjugation_past: Joi.array().items(Joi.object().keys({
+        pronoun: Joi.string().valid('ich', 'du', 'er/sie/es', 'ihr', 'Sie', 'wir').required(),
+        conjugation: Joi.string().required()
+    })),
     categories: Joi.array().items(Joi.string()).required()
 })
 

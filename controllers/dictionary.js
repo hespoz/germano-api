@@ -66,6 +66,7 @@ export const updateWord = async (newWord) => {
     word.perfect = newWord.perfect
     word.translations = newWord.translations
     word.conjugation_present = newWord.conjugation_present
+    word.conjugation_past = newWord.conjugation_past
     word.categories = newWord.categories
 
 
@@ -89,6 +90,7 @@ export const addNewWord = async (word, id) => {
     newWord.perfect = word.perfect
     newWord.translations = word.translations
     newWord.conjugation_present = word.conjugation_present
+    newWord.conjugation_past = word.conjugation_past
     newWord.categories = word.categories
     newWord.ownerId = id
 

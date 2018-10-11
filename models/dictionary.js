@@ -23,6 +23,7 @@ export const DictionarySchema = new mongoose.Schema({
     type: { type: String, enum: ['noun', 'verb', 'modal_verb', 'local_preposition'] },
     translations:[TranslationSchema],
     conjugation_present: [ConjugationSchema],
+    conjugation_past: [ConjugationSchema],
     categories:[{type: String}],
     ownerId: { type: mongoose.Schema.ObjectId, ref: 'User' }
 })

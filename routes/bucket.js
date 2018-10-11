@@ -1,5 +1,5 @@
 import express from 'express'
-import { createBucket, updateBucket, fetchBucketsByUserName, removeBucket } from "../controllers/bucket"
+import { createBucket, updateBucket, fetchBucketsByUserName, removeBucket, searchById } from "../controllers/bucket"
 import Validator from 'express-joi-validation'
 import { createBucketSchema, bucketPerNameParam, idParam } from './validationSchemas'
 
@@ -30,7 +30,7 @@ module.exports = (app, passport) => {
     })
 
 
-    router.get('/:username', validator.params(bucketPerNameParam, {
+    router.get('/name/:username', validator.params(bucketPerNameParam, {
         joi: {allowUnknown: true}
     }), async (req, res, next) => {
         try {
@@ -40,6 +40,19 @@ module.exports = (app, passport) => {
             return next(err)
         }
     })
+
+
+    router.get('/:id', validator.params(idParam, {
+        joi: {allowUnknown: true}
+    }), async (req, res, next) => {
+        try {
+            const bucket =  await searchById(req.params.id)
+            res.json(bucket)
+        } catch (err) {
+            return next(err)
+        }
+    })
+
 
     return router
 }
