@@ -1,5 +1,6 @@
 import {Dictionary} from "../models/dictionary";
-import {includes} from "lodash";
+import {Bucket} from "../models/bucket";
+import {includes, findIndex, forEach} from "lodash";
 
 
 export const addTranslation = async (body) => {
@@ -108,21 +109,68 @@ export const searchById = async (id) => {
 export const fetchWords = async (categories, types) => {
     let searchQuery = {$and:[]}
 
+    let criteria = false
     if (categories) {
-        if (!includes(categories, "Todas")) {
+        if (!includes(categories, "all")) {
             searchQuery.$and.push({categories: categories})
+            criteria = true
         }
     }
 
     if (types) {
-        searchQuery.$and.push({type: {$in: types}})
+        if (!includes(types, "all")) {
+            searchQuery.$and.push({type: {$in: types}})
+            criteria = true
+        }
     }
 
-    if(!categories && !types) {
+    if(!criteria) {
         searchQuery={}
     }
 
-    console.log(searchQuery)
 
     return await Dictionary.find(searchQuery)
+}
+
+export const fetchWordsFromBuckets = async (categories, types, bucketsSelected) => {
+
+    let searchQuery = {$and:[]}
+
+    if (!includes(bucketsSelected, "all")) {
+        searchQuery.$and.push({_id:{$in: bucketsSelected}})
+    }
+
+    let bucketList = await Bucket.find(searchQuery.$and.length > 0 ? searchQuery : {})
+
+    let searchQueryForWords = {$and:[]}
+    let searchWordsIds = []
+    for(let i = 0 ; i < bucketList.length; i++) {
+        const w = JSON.parse(JSON.stringify(bucketList[i].words))
+        for(let j = 0 ; j < w.length; j++) {
+            searchWordsIds.push(w[j]._id)
+        }
+    }
+
+    let words = []
+    if (searchWordsIds.length > 0) {
+
+        searchQueryForWords.$and.push({_id: {$in: searchWordsIds}})
+
+        if (categories) {
+            if (!includes(categories, "all")) {
+                searchQueryForWords.$and.push({categories: categories})
+            }
+        }
+
+        if (types) {
+            if (!includes(types, "all")) {
+                searchQueryForWords.$and.push({type: {$in: types}})
+            }
+        }
+
+        words = await Dictionary.find(searchQueryForWords)
+    }
+
+    return words
+
 }
