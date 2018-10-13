@@ -13,7 +13,7 @@ router.post('/', validator.body(registerSchema), async (req, res, next) => {
 
         const createdUser = await registerUser(req.body)
         return res.json({
-            token:generateToken(createdUser)
+            token:generateToken(createdUser), userId: createdUser._id, userName:createdUser.username
         })
 
     } catch (err) {

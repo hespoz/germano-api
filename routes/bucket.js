@@ -35,7 +35,7 @@ module.exports = (app, passport) => {
     }), async (req, res, next) => {
         try {
             const buckets =  await fetchBucketsByUserName(req.params.username)
-            res.json(buckets)
+            res.json({username: req.params.username, buckets:buckets})
         } catch (err) {
             return next(err)
         }
