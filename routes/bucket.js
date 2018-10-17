@@ -1,7 +1,7 @@
 import express from 'express'
-import { createBucket, updateBucket, fetchBucketsByUserName, removeBucket, searchById } from "../controllers/bucket"
+import { createBucket, updateBucket, fetchBucketsByUserName, removeBucket, searchById, getLastBuckets } from "../controllers/bucket"
 import Validator from 'express-joi-validation'
-import { createBucketSchema, bucketPerNameParam, idParam } from './validationSchemas'
+import { createBucketSchema, bucketPerNameParam, idParam, numberParam } from './validationSchemas'
 
 const router = express.Router()
 const validator = Validator({})
@@ -52,6 +52,20 @@ module.exports = (app, passport) => {
             return next(err)
         }
     })
+
+
+    router.get('/last/:number', validator.params(numberParam, {
+        joi: {allowUnknown: true}
+    }), async (req, res, next) => {
+        try {
+            const bucket =  await getLastBuckets(req.params.number)
+            res.json(bucket)
+        } catch (err) {
+            return next(err)
+        }
+    })
+
+
 
 
     return router

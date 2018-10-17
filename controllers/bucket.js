@@ -10,6 +10,11 @@ export const removeBucket = async (id) => {
     return await Bucket.findByIdAndRemove(id)
 }
 
+export const getLastBuckets = async (number) => {
+    return await Bucket.find({}).limit(number)
+}
+
+
 export const createBucket = async (bucket, ownerId) => {
 
     const result = await Bucket.find({word: bucket.name}).limit(1)
