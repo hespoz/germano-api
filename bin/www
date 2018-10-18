@@ -26,8 +26,7 @@ mongoose.connect(process.env.MONGO_DB)
  */
 
 var port = 7000;
-console.log(port)
-app.set('port', port);
+app.set('port', process.env.PORT || port);
 
 /**
  * Create HTTP server.
