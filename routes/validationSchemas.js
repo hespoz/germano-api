@@ -40,6 +40,7 @@ export const keywordParam = Joi.object({
 
 export const registerSchema = Joi.object({
     email: Joi.string().email().required(),
+    username: Joi.string().required(),
     password: Joi.string().required(),
     type: Joi.string().valid('user', 'admin').required()
 })
@@ -54,7 +55,7 @@ export const idParam = Joi.object({
 })
 
 export const numberParam = Joi.object({
-    id: Joi.number().required()
+    number: Joi.number().required()
 })
 
 export const fetchWordsSchema = Joi.object({

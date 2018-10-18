@@ -17,7 +17,9 @@ const SentenceSchema = new mongoose.Schema({
 
 const BucketSchema = new mongoose.Schema({
     name:String,
+    time : { type : Date, default: Date.now },
     ownerId: { type: mongoose.Schema.ObjectId, ref: 'User' },
+    ownerName: String,
     sentences:[SentenceSchema],
     words: [DictionarySchema]
 })

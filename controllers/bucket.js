@@ -11,11 +11,11 @@ export const removeBucket = async (id) => {
 }
 
 export const getLastBuckets = async (number) => {
-    return await Bucket.find({}).limit(number)
+    return await Bucket.find({}).sort([['time', 'descending']]).limit(number)
 }
 
 
-export const createBucket = async (bucket, ownerId) => {
+export const createBucket = async (bucket, ownerId, ownerName) => {
 
     const result = await Bucket.find({word: bucket.name}).limit(1)
 
@@ -27,6 +27,7 @@ export const createBucket = async (bucket, ownerId) => {
     newBucket.name = bucket.name
     newBucket.ownerId = ownerId
     newBucket.sentences = bucket.sentences
+    newBucket.ownerName = ownerName
 
 
     if (bucket.wordsIds) {
@@ -88,5 +89,5 @@ export const fetchBucketsByUserName = async (username) => {
     if(!user) {
         return {}
     }
-    return await Bucket.find({ownerId:user._id})
+    return await Bucket.find({ownerId:user._id}).sort([['time', 'descending']])
 }
