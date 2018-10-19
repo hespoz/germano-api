@@ -8,6 +8,8 @@ const ExtractJWT = passportJWT.ExtractJwt
 
 dotenv.config()
 
+console.log(process.env.SECRET_JWT_KEY)
+
 const findUserById = async (jwtPayload, cb) => {
     try{
         const user = await User.findById(jwtPayload.id)
