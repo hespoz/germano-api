@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var cors = require('cors')
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 import passport from './config/passport'
@@ -16,6 +17,8 @@ app.use(passport.initialize());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
+
+app.use(cors())
 
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/user', user);
