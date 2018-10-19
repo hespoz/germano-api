@@ -1,4 +1,5 @@
 import {Bucket} from "../models/bucket";
+import {saveHistory} from "./history";
 import {findIndex} from "lodash";
 
 
@@ -30,6 +31,8 @@ export const addComment = async (sentenceId, comment, user) => {
     } else {
         sentence.comments = [{comment}]
     }
+
+    await saveHistory(bucket, sentence, user)
 
     return await bucket.save()
 }
