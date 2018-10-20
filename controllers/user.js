@@ -42,3 +42,8 @@ export const verifyUser = async (token) => {
     throw new Error("El token no existe")
 
 }
+
+export const verificationStatus = async (userId) => {
+    let user = await User.findById(userId)
+    return user.verified
+}
