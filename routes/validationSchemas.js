@@ -58,6 +58,10 @@ export const numberParam = Joi.object({
     number: Joi.number().required()
 })
 
+export const tokenParam = Joi.object({
+    token: Joi.string().required()
+})
+
 export const fetchWordsSchema = Joi.object({
     categories: Joi.array().items(Joi.string()),
     types: Joi.array().items(Joi.string()),
