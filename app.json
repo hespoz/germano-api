@@ -1,0 +1,6 @@
+{
+  "name": "Germano Api",
+  "description": "Germano api for web and mobile app",
+  "repository": "https://github.com/hespoz/germano-api",
+  "keywords": ["node", "express", "static"]
+}
