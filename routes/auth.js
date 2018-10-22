@@ -33,5 +33,9 @@ module.exports = (app, passport) => {
         }
     })
 
+    router.get('/staging', async(req, res, next) => {
+        res.json({message:"solo staging"})
+    })
+
     return router
 }
