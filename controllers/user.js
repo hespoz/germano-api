@@ -1,5 +1,6 @@
 import {User} from "../models/user";
 import {sendConfirmationEmail} from "../utils/emailUtils"
+import {get} from "lodash"
 import crypto from "crypto"
 
 export const registerUser = async (data) => {
@@ -46,4 +47,20 @@ export const verifyUser = async (token) => {
 export const verificationStatus = async (userId) => {
     let user = await User.findById(userId)
     return user.verified
+}
+
+export const resendVerificationLink = async (userId) => {
+    const user = await User.findById(userId)
+
+    if(user){
+
+        if (!get(user, "token")) {
+            user.token = crypto.createHash('sha1').update(user.email + Math.random().toString(36).substring(7)).digest('hex')
+            await user.save()
+        }
+
+        await sendConfirmationEmail(user.email, user.token)
+        return true
+    }
+
 }

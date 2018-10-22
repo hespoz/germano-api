@@ -1,7 +1,7 @@
 import express from 'express'
 import {generateToken} from "../utils/authUtils"
 import {authenticate} from "../controllers/auth"
-import {verificationStatus} from "../controllers/user"
+import {resendVerificationLink, verificationStatus} from "../controllers/user"
 import Validator from 'express-joi-validation'
 import {loginSchema} from './validationSchemas'
 
@@ -21,6 +21,16 @@ module.exports = (app, passport) => {
 
     router.get('/confirmation/status', passport.authenticate('jwt', {session: false}), async (req, res, next) => {
         return res.json(await verificationStatus(req.user._id))
+    })
+
+    router.put('/resend/verification', passport.authenticate('jwt', {session: false}), async (req, res, next) => {
+        try {
+
+            return res.json(await resendVerificationLink(req.user._id))
+
+        } catch (err) {
+            next(err)
+        }
     })
 
     return router

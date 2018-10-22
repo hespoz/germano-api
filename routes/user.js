@@ -1,5 +1,5 @@
 import express from 'express'
-import { registerUser, verifyUser } from '../controllers/user'
+import { registerUser, verifyUser, resendVerificationLink } from '../controllers/user'
 import {generateToken} from "../utils/authUtils"
 import Validator from 'express-joi-validation'
 
@@ -31,5 +31,8 @@ router.put('/confirm/:token', validator.params(tokenParam), async (req, res, nex
         next(err)
     }
 })
+
+
+
 
 module.exports = router;
