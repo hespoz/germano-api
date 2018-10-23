@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
     username:String,
     password:String,
     token:String,
+    recoveryToken: String,
     verified:{type:Boolean, default:false},
     type:{ type: String, enum: ['user', 'admin'] }
 })
