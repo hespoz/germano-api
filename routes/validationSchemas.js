@@ -98,3 +98,12 @@ export const removeCommentSchema = Joi.object({
     sentenceId: Joi.objectId().required(),
     commentId: Joi.objectId().required()
 })
+
+export const emailParam = Joi.object({
+    email: Joi.string().email().required()
+})
+
+export const resetPasswordSchema = Joi.object({
+    password: Joi.string().required(),
+    recoveryToken: Joi.string().required()
+})

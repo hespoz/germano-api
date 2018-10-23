@@ -1,7 +1,10 @@
 import {User} from "../models/user";
-import {sendConfirmationEmail} from "../utils/emailUtils"
+import {sendConfirmationEmail, sendPasswordRecoveryEmail} from "../utils/emailUtils"
 import {get} from "lodash"
 import crypto from "crypto"
+
+
+const generateToken = (email) => crypto.createHash('sha1').update(email + Math.random().toString(36).substring(7)).digest('hex')
 
 export const registerUser = async (data) => {
     const result = await User.find({
@@ -14,7 +17,7 @@ export const registerUser = async (data) => {
         throw new Error("This user is already added")
     }
 
-    const verificationToken = crypto.createHash('sha1').update(data.email + Math.random().toString(36).substring(7)).digest('hex')
+    const verificationToken = generateToken(data.email)
 
     let newUser = new User()
     newUser.email = data.email
@@ -55,7 +58,7 @@ export const resendVerificationLink = async (userId) => {
     if(user){
 
         if (!get(user, "token")) {
-            user.token = crypto.createHash('sha1').update(user.email + Math.random().toString(36).substring(7)).digest('hex')
+            user.token = generateToken(user.email)
             await user.save()
         }
 
@@ -64,3 +67,37 @@ export const resendVerificationLink = async (userId) => {
     }
 
 }
+
+export const requestRecoverPassword = async (email) => {
+
+    const user = await User.findOne({email})
+
+
+    if (user) {
+        user.recoveryToken = generateToken(user.email)
+        await user.save()
+
+        await sendPasswordRecoveryEmail(user.email, user.recoveryToken)
+    }
+
+
+
+    return true
+
+}
+
+
+export const resetPassword = async (recoveryToken, newPassword) => {
+    const user = await User.findOne({recoveryToken})
+
+    if (user) {
+        user.recoveryToken = null
+        user.password = newPassword
+        await user.save()
+        return true
+    }
+
+    throw new Error("You link has expired")
+
+}
+

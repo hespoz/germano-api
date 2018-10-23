@@ -1,9 +1,9 @@
 import express from 'express'
 import {generateToken} from "../utils/authUtils"
 import {authenticate} from "../controllers/auth"
-import {resendVerificationLink, verificationStatus} from "../controllers/user"
+import {resendVerificationLink, verificationStatus, requestRecoverPassword, resetPassword} from "../controllers/user"
 import Validator from 'express-joi-validation'
-import {loginSchema} from './validationSchemas'
+import {loginSchema, emailParam, resetPasswordSchema} from './validationSchemas'
 
 
 const router = express.Router()
@@ -32,6 +32,27 @@ module.exports = (app, passport) => {
             next(err)
         }
     })
+
+    router.put('/recover/password/:email', validator.params(emailParam), async (req, res, next) => {
+        try {
+
+            return res.json(await requestRecoverPassword(req.params.email))
+
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    router.put('/reset/password', validator.body(resetPasswordSchema), async (req, res, next) => {
+        try {
+
+            return res.json(await resetPassword(req.body.recoveryToken, req.body.password))
+
+        } catch (err) {
+            next(err)
+        }
+    })
+
 
     return router
 }

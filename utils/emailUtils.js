@@ -11,11 +11,20 @@ export const sendConfirmationEmail = async (toEmail, confirmationToken) => {
     await sendEmail(toEmail, "Bienvenido a Germanos! Por favor confirma to email", html)
 }
 
+export const sendPasswordRecoveryEmail = async (toEmail, token) => {
+    let html = `
+        <h1>Recupera tu password!</h1>
+        <p>Por favor haz click en el siguiente link para recuperar tu password </p>
+        <a href="https://www.${process.env.MAILGUN_DOMAIN}/reset/password/${token}">Confirmar</a>
+    `
+    await sendEmail(toEmail, "Recupera tu password", html)
+}
+
 export const sendEmail = async (toEmail, subject, htmlContent) => {
     await mg.messages.create(process.env.MAILGUN_DOMAIN, {
         from: `Bienvenido a Germanos <no-reply@${process.env.MAILGUN_DOMAIN}>`,
         to: [toEmail],
-        subject: "Hello",
+        subject: subject,
         text: subject,
         html: htmlContent
     })
