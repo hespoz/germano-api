@@ -107,3 +107,8 @@ export const resetPasswordSchema = Joi.object({
     password: Joi.string().required(),
     recoveryToken: Joi.string().required()
 })
+
+export const updateUserProfileSchema = Joi.object({
+    email: Joi.string().email().required(),
+    username: Joi.string().required()
+})

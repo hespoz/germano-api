@@ -1,4 +1,5 @@
 import {User} from "../models/user";
+import {CreditCard} from "../models/CreditCard";
 import {sendConfirmationEmail, sendPasswordRecoveryEmail} from "../utils/emailUtils"
 import {get} from "lodash"
 import crypto from "crypto"
@@ -33,6 +34,23 @@ export const registerUser = async (data) => {
 
 }
 
+
+export const updateUserProfile = async (userId, data) => {
+    let user = await User.findById(userId)
+
+    const actualUser = await User.findOne({$or: [{email:data.email},{username:data.username}]})
+
+    if(String(actualUser._id) === String(userId)){
+        user.email = data.email
+        user.username = data.username
+        await user.save()
+    } else {
+        throw new Error("Email or username is already taken")
+    }
+
+    return await fetchUserInfo(userId)
+}
+
 export const verifyUser = async (token) => {
     let user = await User.findOne({token: token})
 
@@ -55,7 +73,7 @@ export const verificationStatus = async (userId) => {
 export const resendVerificationLink = async (userId) => {
     const user = await User.findById(userId)
 
-    if(user){
+    if (user) {
 
         if (!get(user, "token")) {
             user.token = generateToken(user.email)
@@ -81,7 +99,6 @@ export const requestRecoverPassword = async (email) => {
     }
 
 
-
     return true
 
 }
@@ -99,5 +116,13 @@ export const resetPassword = async (recoveryToken, newPassword) => {
 
     throw new Error("You link has expired")
 
+}
+
+export const fetchUserInfo = async (userId) => {
+    const user = await User.findById(userId)
+    return {
+        user: user,
+        creditCard: await CreditCard.findById(user.creditCard)
+    }
 }
 

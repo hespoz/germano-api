@@ -22,7 +22,7 @@ app.use(cookieParser())
 app.use(cors())
 
 app.use('/api/v1/auth', auth(app, passport));
-app.use('/api/v1/user', user);
+app.use('/api/v1/user', user(app, passport));
 app.use('/api/v1/bucket', bucket(app, passport));
 app.use('/api/v1/dictionary', dictionary(app, passport));
 app.use('/api/v1/comment', comment(app, passport));
