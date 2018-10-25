@@ -61,7 +61,6 @@ module.exports = (app, passport) => {
     router.put('/info/confirm/:token', validator.params(tokenParam), async (req, res, next) => {
         try {
 
-            console.log(req.params.token)
             return res.json(await updateUserProfileConfirm(req.params.token))
 
         } catch (err) {

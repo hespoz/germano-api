@@ -73,7 +73,10 @@ export const updateUserProfile = async (userId, data) => {
 
 
 
-    return "Los datos fueron actualizados, para actualizar el email por favor revisa tu correo electronico"
+    return {
+        message: "Los datos fueron actualizados, para actualizar el email por favor revisa tu correo electronico",
+        username: user.username
+    }
 }
 
 
@@ -158,8 +161,7 @@ export const updateUserProfileConfirm = async (token) => {
     const pendingChange = await PendingChange.findOne({token})
     let user = await User.findById(pendingChange.userId)
     user.email = pendingChange.newEmail
-    await user.save()
     await pendingChange.remove()
-    return true
+    return await user.save()
 }
 
