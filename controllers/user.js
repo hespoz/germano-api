@@ -1,9 +1,9 @@
 import {User} from "../models/user";
 import {CreditCard} from "../models/CreditCard";
-import {sendConfirmationEmail, sendPasswordRecoveryEmail} from "../utils/emailUtils"
+import {PendingChange} from "../models/PendingChange";
+import {sendConfirmationEmail, sendPasswordRecoveryEmail, sendUpdateInfoConfirmationEmail} from "../utils/emailUtils"
 import {get} from "lodash"
 import crypto from "crypto"
-
 
 const generateToken = (email) => crypto.createHash('sha1').update(email + Math.random().toString(36).substring(7)).digest('hex')
 
@@ -38,18 +38,45 @@ export const registerUser = async (data) => {
 export const updateUserProfile = async (userId, data) => {
     let user = await User.findById(userId)
 
-    const actualUser = await User.findOne({$or: [{email:data.email},{username:data.username}]})
-
-    if(String(actualUser._id) === String(userId)){
-        user.email = data.email
-        user.username = data.username
-        await user.save()
-    } else {
-        throw new Error("Email or username is already taken")
+    if (!user) {
+        throw new Error("Your token is invalid")
     }
 
-    return await fetchUserInfo(userId)
+    user.notifications = data.notifications
+
+
+
+    const existEmailUser = await User.findOne({email:data.email})
+    const existUsernameUser = await User.findOne({username:data.username})
+
+
+    if(existUsernameUser && String(existUsernameUser._id) !== String(userId)) {
+        throw new Error("This username is already in use")
+    }
+
+    user.username = data.username
+
+    await user.save()
+
+    if(existEmailUser && String(existEmailUser._id) !== String(userId)) {
+        throw new Error("This email is already in use")
+    } else {
+        if(data.email !== user.email){
+            let pendingChange = new PendingChange()
+            pendingChange.userId = userId
+            pendingChange.newEmail = data.email
+            pendingChange.token = generateToken(data.email)
+            await pendingChange.save()
+            await sendUpdateInfoConfirmationEmail(user.email, pendingChange.token)
+        }
+    }
+
+
+
+    return "Los datos fueron actualizados, para actualizar el email por favor revisa tu correo electronico"
 }
+
+
 
 export const verifyUser = async (token) => {
     let user = await User.findOne({token: token})
@@ -124,5 +151,15 @@ export const fetchUserInfo = async (userId) => {
         user: user,
         creditCard: await CreditCard.findById(user.creditCard)
     }
+}
+
+
+export const updateUserProfileConfirm = async (token) => {
+    const pendingChange = await PendingChange.findOne({token})
+    let user = await User.findById(pendingChange.userId)
+    user.email = pendingChange.newEmail
+    await user.save()
+    await pendingChange.remove()
+    return true
 }
 

@@ -1,5 +1,5 @@
 import express from 'express'
-import { registerUser, verifyUser, fetchUserInfo, updateUserProfile } from '../controllers/user'
+import { registerUser, verifyUser, fetchUserInfo, updateUserProfile, updateUserProfileConfirm } from '../controllers/user'
 import {generateToken} from "../utils/authUtils"
 import Validator from 'express-joi-validation'
 
@@ -17,7 +17,8 @@ module.exports = (app, passport) => {
                 token: generateToken(createdUser),
                 userId: createdUser._id,
                 userName: createdUser.username,
-                verified: createdUser.verified
+                verified: createdUser.verified,
+                email: createdUser.email
             })
 
         } catch (err) {
@@ -50,6 +51,18 @@ module.exports = (app, passport) => {
         try {
 
             return res.json(await updateUserProfile(req.user._id, req.body))
+
+        } catch (err) {
+            next(err)
+        }
+    })
+
+
+    router.put('/info/confirm/:token', validator.params(tokenParam), async (req, res, next) => {
+        try {
+
+            console.log(req.params.token)
+            return res.json(await updateUserProfileConfirm(req.params.token))
 
         } catch (err) {
             next(err)

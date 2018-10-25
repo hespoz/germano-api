@@ -16,7 +16,7 @@ module.exports = (app, passport) => {
         if(!user){
             return res.status(401).json({message:'Email or password is incorrect'})
         }
-        return res.json({token: generateToken(user), userId: user.id, userName:user.username, verified: user.verified})
+        return res.json({token: generateToken(user), userId: user.id, userName:user.username, verified: user.verified, email: user.email})
     })
 
     router.get('/confirmation/status', passport.authenticate('jwt', {session: false}), async (req, res, next) => {

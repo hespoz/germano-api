@@ -1,6 +1,15 @@
 import mailgun from 'mailgun.js'
 const mg = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY});
 
+export const sendUpdateInfoConfirmationEmail = async (toEmail, token) => {
+    let html = `
+        <h1>Confirma el cambio de tu email!</h1>
+        <p>Para confirmar haz click en el siguient link </p>
+        <a href="https://www.${process.env.MAILGUN_DOMAIN}/info/update/confirm/${token}">Confirmar</a>
+    `
+    await sendEmail(toEmail, "Confirma el cambio de tu email!", html)
+}
+
 
 export const sendConfirmationEmail = async (toEmail, confirmationToken) => {
     let html = `
