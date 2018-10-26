@@ -113,3 +113,8 @@ export const updateUserProfileSchema = Joi.object({
     username: Joi.string().required(),
     notifications: Joi.boolean().required()
 })
+
+export const changePasswordSchema = Joi.object({
+    currentPassword: Joi.string().required(),
+    password: Joi.string().required()
+})

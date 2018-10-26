@@ -133,7 +133,6 @@ export const requestRecoverPassword = async (email) => {
 
 }
 
-
 export const resetPassword = async (recoveryToken, newPassword) => {
     const user = await User.findOne({recoveryToken})
 
@@ -148,6 +147,19 @@ export const resetPassword = async (recoveryToken, newPassword) => {
 
 }
 
+export const changePassword = async (userId, currentPassword, newPassword) => {
+    const user = await User.findById(userId)
+
+    if (user && user.password === currentPassword) {
+        user.password = newPassword
+        await user.save()
+        return true
+    }
+
+    throw new Error("Password incorrecto")
+
+}
+
 export const fetchUserInfo = async (userId) => {
     const user = await User.findById(userId)
     return {
@@ -159,6 +171,11 @@ export const fetchUserInfo = async (userId) => {
 
 export const updateUserProfileConfirm = async (token) => {
     const pendingChange = await PendingChange.findOne({token})
+
+    if(!pendingChange){
+        throw new Error("El link expiro")
+    }
+
     let user = await User.findById(pendingChange.userId)
     user.email = pendingChange.newEmail
     await pendingChange.remove()
