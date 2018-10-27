@@ -53,7 +53,7 @@ module.exports = (app, passport) => {
         }
     })
 
-    router.put('/change/password', validator.body(changePasswordSchema), async (req, res, next) => {
+    router.put('/change/password', passport.authenticate('jwt', {session: false}), validator.body(changePasswordSchema), async (req, res, next) => {
         try {
 
             return res.json(await changePassword(req.user._id, req.body.currentPassword, req.body.password))
