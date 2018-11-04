@@ -1,9 +1,9 @@
 import express from 'express'
 import {generateToken} from "../utils/authUtils"
 import {authenticate} from "../controllers/auth"
-import {resendVerificationLink, verificationStatus, requestRecoverPassword, resetPassword} from "../controllers/user"
+import {resendVerificationLink, verificationStatus, requestRecoverPassword, resetPassword, changePassword} from "../controllers/user"
 import Validator from 'express-joi-validation'
-import {loginSchema, emailParam, resetPasswordSchema} from './validationSchemas'
+import {loginSchema, emailParam, resetPasswordSchema, changePasswordSchema} from './validationSchemas'
 
 
 const router = express.Router()
@@ -16,7 +16,7 @@ module.exports = (app, passport) => {
         if(!user){
             return res.status(401).json({message:'Email or password is incorrect'})
         }
-        return res.json({token: generateToken(user), userId: user.id, userName:user.username, verified: user.verified})
+        return res.json({token: generateToken(user), userId: user.id, userName:user.username, verified: user.verified, email: user.email})
     })
 
     router.get('/confirmation/status', passport.authenticate('jwt', {session: false}), async (req, res, next) => {
@@ -52,6 +52,17 @@ module.exports = (app, passport) => {
             next(err)
         }
     })
-    
+
+    router.put('/change/password', passport.authenticate('jwt', {session: false}), validator.body(changePasswordSchema), async (req, res, next) => {
+        try {
+
+            return res.json(await changePassword(req.user._id, req.body.currentPassword, req.body.password))
+
+        } catch (err) {
+            next(err)
+        }
+    })
+
+
     return router
 }

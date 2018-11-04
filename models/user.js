@@ -9,7 +9,8 @@ const UserSchema = new mongoose.Schema({
     token:String,
     recoveryToken: String,
     verified:{type:Boolean, default:false},
-    type:{ type: String, enum: ['user', 'admin'] }
+    type:{ type: String, enum: ['user', 'admin'] },
+    notifications:{type:Boolean, default:true}
 })
 
 export const User = mongoose.model('User', UserSchema)
