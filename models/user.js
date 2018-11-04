@@ -10,7 +10,6 @@ const UserSchema = new mongoose.Schema({
     recoveryToken: String,
     verified:{type:Boolean, default:false},
     type:{ type: String, enum: ['user', 'admin'] },
-    creditCard: { type: mongoose.Schema.ObjectId, ref: 'CreditCard' },
     notifications:{type:Boolean, default:true}
 })
 

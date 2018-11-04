@@ -1,5 +1,4 @@
 import {User} from "../models/user";
-import {CreditCard} from "../models/CreditCard";
 import {PendingChange} from "../models/PendingChange";
 import {sendConfirmationEmail, sendPasswordRecoveryEmail, sendUpdateInfoConfirmationEmail} from "../utils/emailUtils"
 import {get} from "lodash"
@@ -163,8 +162,7 @@ export const changePassword = async (userId, currentPassword, newPassword) => {
 export const fetchUserInfo = async (userId) => {
     const user = await User.findById(userId)
     return {
-        user: user,
-        creditCard: await CreditCard.findById(user.creditCard)
+        user: user
     }
 }
 
