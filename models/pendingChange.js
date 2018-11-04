@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 mongoose.Promise = Promise
 
 const PendingChangeSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.ObjectId, ref: 'User' },
+    userId: { type: mongoose.Schema.ObjectId, ref: 'User', default:null },
     newEmail:String,
     token: String
 })
