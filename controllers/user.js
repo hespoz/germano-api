@@ -1,5 +1,5 @@
 import {User} from "../models/user";
-import {PendingChange} from "../models/PendingChange";
+import {PendingChange} from "../models/pendingChange";
 import {sendConfirmationEmail, sendPasswordRecoveryEmail, sendUpdateInfoConfirmationEmail} from "../utils/emailUtils"
 import {get} from "lodash"
 import crypto from "crypto"
